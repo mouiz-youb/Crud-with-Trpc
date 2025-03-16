@@ -7,14 +7,17 @@ import { IoLinkOutline } from "react-icons/io5";
 import Link from 'next/link';
 
 interface ProductProps {
+    id: number
     name:String
     price: number
 }
 
 const  Product:React.FC<ProductProps>=({
+    id,
     name,
     price
 })=> {
+    
   return (
     <div  className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
         <img src={imageCart.src} alt=""  className='w-full '/>
@@ -41,6 +44,10 @@ const  Product:React.FC<ProductProps>=({
                 <div className='flex  justify-center items-center  gap-2 '>
                     <Link href="/" className='cursor-pointer flex justify-center items-center gap-2'>visited Link <IoLinkOutline/></Link>
                 </div>
+            </div>
+            <div className='flex  justify-center items-center p-5 gap-5'>
+                <button className='flex justify-center items-center p-2 rounded-xl shadow-xl text-white bg-blue-500 hover:text-blue-500 hover:bg-white'>update the Product</button>
+                <button className='flex justify-center items-center p-2 rounded-xl shadow-xl text-white bg-red-500 hover:text-red-500 hover:bg-white'>delete the product</button>
             </div>
         </div>
     </div>

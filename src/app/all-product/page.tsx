@@ -1,7 +1,7 @@
 "use client"; // Ensure this is at the top of the file with no space
 
 import { useEffect } from "react";
-import Product from "../_components/Product";
+import Product from '../_components/Product';
 import { api } from "@/trpc/react";
 
 const Page: React.FC = () => {
@@ -20,7 +20,7 @@ const Page: React.FC = () => {
       {products && products.length > 0 ? (
         products.map((product ) => (
             <div key={product.id}>
-                <Product  name={product.name} price={product.price} />
+                <Product id={product.id}  name={product.name} price={product.price} />
             </div>
         ))
       ) : (
