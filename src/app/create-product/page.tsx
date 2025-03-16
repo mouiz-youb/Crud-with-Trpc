@@ -59,11 +59,11 @@ function Page() {
           placeholder="Enter The Price Of The Product"
         />
         <button
-          disabled={createProduct.isloading} // Use isLoading for disabled state
+        //   disabled={createProduct.isLoading} // Fixed: Use `isLoading` (uppercase L)
           type="submit"
           className="w-full cursor-pointer rounded-xl bg-black p-3 text-center text-white shadow-xl transition-all hover:bg-gray-400 hover:text-black"
         >
-          {createProduct.isLoading ? "Creating..." : "Create New Product"}
+          Create New Product
         </button>
 
         {/* Display error message */}

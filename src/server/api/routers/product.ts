@@ -7,7 +7,7 @@ export const productRouter = createTRPCRouter({
     createProduct:publicProcedure
     // the next line  include input that contains the validation for the input fields using zod
     .input(z.object({
-        name:z.string().min(1,"Title is required"),
+        name:z.string().min(3,"Title is required"),
         price :z.number().min(0, "Price must be a positive number")
     }))
     // the next line 
