@@ -3,15 +3,18 @@
 import React from 'react'
 import imageCart from "@/images/imageCart.svg"
 import { FaStar } from "react-icons/fa";
+import { IoLinkOutline } from "react-icons/io5";
+import Link from 'next/link';
+
 
 function Product() {
   return (
-    <div className='flex justify-center items-center gap-5 border-2  flex-col '>
-        <img src={imageCart} alt=""  className='w-full h-[100px] '/>
+    <div className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
+        <img src={imageCart.src} alt=""  className='w-full '/>
         <div className='flex justify-center items-center flex-col gap-3 '>
-            <div className=' flex  justify-between items-center  gap-2 '>
-                <div className='flex  justify-center items-center flex-col gap-2 '>
-                    The name of product is :
+            <div className=' flex  justify-between items-center gap-2 flex-col '>
+                <div className='flex  justify-start items-center w-full  gap-2 '>
+                    <h2 className='text-xl font-bold text-gray-800'>Product Name :</h2>
                 </div>
                 <div className='flex  justify-center items-center  gap-2 '>
                     <FaStar className='text-yellow-500' />
@@ -24,11 +27,13 @@ function Product() {
             <div className='flex justify-center items-center '>
                 <p></p>
             </div>
-            <div className=' flex  justify-between items-center  gap-2 '>
-                <div className='flex  justify-center items-center flex-col gap-2 '>
-                    <p>The  Price of product  is :</p>
+            <div className=' flex  justify-between items-center flex-col  gap-2 '>
+                <div className='flex  justify-center items-center  gap-2 '>
+                    <p>Product Price  :</p>
                 </div>
-                <div className='flex  justify-center items-center  gap-2 '></div>
+                <div className='flex  justify-center items-center  gap-2 '>
+                    <Link href="/" className='cursor-pointer flex justify-center items-center gap-2'>visited Link <IoLinkOutline/></Link>
+                </div>
             </div>
         </div>
     </div>
