@@ -2,12 +2,14 @@
 
 import React, { useState } from "react";
 import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 
 function Page() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   const createProduct = api.product.createProduct.useMutation({
     onSuccess: () => {
@@ -16,6 +18,7 @@ function Page() {
       setError(null);
       setName("");
       setPrice("");
+      router.push("/all-product");
     },
     onError: (error) => {
       setError(error.message);
