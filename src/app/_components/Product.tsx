@@ -25,8 +25,6 @@ const  Product:React.FC<ProductProps>=({
     const router=useRouter()
       const utils = api.useUtils()
     
-
-    
     // hendle update btn click
     const handleUpdate = ()=>{
         router.push(`/update-product/${id}`) 

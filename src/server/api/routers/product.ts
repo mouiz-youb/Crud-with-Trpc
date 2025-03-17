@@ -9,7 +9,8 @@ export const productRouter = createTRPCRouter({
     // the next line  include input that contains the validation for the input fields using zod
     .input(z.object({
         name:z.string().min(3 ,"Title is required"),
-        price :z.number().min(0, "Price must be a positive number")
+        price :z.number().min(0, "Price must be a positive number"),
+        image :z.string().optional() //add image field
     }))
     // the next line 
     .mutation(async ({input ,ctx})=>{
@@ -17,7 +18,8 @@ export const productRouter = createTRPCRouter({
        return ctx.db.product.create({
         data:{
             name:input.name,
-            price:input.price
+            price:input.price,
+            image:input.image
         }
        })
     }),
@@ -40,7 +42,8 @@ export const productRouter = createTRPCRouter({
     .input(z.object({
         id:z.number(),
         name:z.string().min(3 ,"Title is required"),
-        price :z.number().min(0, "Price must be a positive number")
+        price :z.number().min(0, "Price must be a positive number"),
+        image: z.string().optional(),
     }))
     .mutation(async({input,ctx})=>{
         return ctx.db.product.update({
@@ -49,7 +52,8 @@ export const productRouter = createTRPCRouter({
             },
             data:{
                 name:input.name,
-                price:input.price
+                price:input.price,
+                image :input.image
             }
         })
     }),
