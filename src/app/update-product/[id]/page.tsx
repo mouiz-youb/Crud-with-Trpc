@@ -3,6 +3,7 @@
 import React, { useEffect, useState  ,use} from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 function Page({ params }: { params: Promise<{ id: string }> }){
   const [name, setName] = useState("");
@@ -11,7 +12,7 @@ function Page({ params }: { params: Promise<{ id: string }> }){
   const [success, setSuccess] = useState(false);
   const router = useRouter();
   const {id}= use(params)
-
+    const utils = api.useUtils()
 
 //   Fetch the product details using the Id from the url
 const {data:product} = api.product.getById.useQuery({
@@ -32,6 +33,8 @@ useEffect(()=>{
 const updateProduct = api.product.update.useMutation({
     onSuccess: () => {
         setSuccess(true);
+        utils.product.getAll.invalidate()
+        toast.success(`The product updated successfully`)
         router.push("/all-product");
     },
     onError: (error) => {

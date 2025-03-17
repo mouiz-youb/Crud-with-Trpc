@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 function Page() {
   const [name, setName] = useState("");
@@ -10,6 +11,8 @@ function Page() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const utils = api.useUtils()
+
 
   const createProduct = api.product.createProduct.useMutation({
     onSuccess: () => {
@@ -18,10 +21,13 @@ function Page() {
       setError(null);
       setName("");
       setPrice("");
+      utils.product.getAll.invalidate()
+      toast.success(`The product created successfully`)
       router.push("/all-product");
     },
     onError: (error) => {
       setError(error.message);
+      toast.error(error.message)
       setSuccess(false);
     },
   });

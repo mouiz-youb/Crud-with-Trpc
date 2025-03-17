@@ -23,7 +23,10 @@ const  Product:React.FC<ProductProps>=({
     const updateProduct = api.product.update.useMutation()
     const deleteProduct = api.product.delete.useMutation()
     const router=useRouter()
+      const utils = api.useUtils()
+    
 
+    
     // hendle update btn click
     const handleUpdate = ()=>{
         router.push(`/update-product/${id}`) 
@@ -31,46 +34,50 @@ const  Product:React.FC<ProductProps>=({
 
 
     // Handle delete button click
-  const handleDelete = () => {
-    // Show a confirmation toast
-    toast(
-      (t) => (
-        <div className="flex flex-col items-center gap-3 p-4 ">
-          <p>Are you sure you want to delete this product?</p>
-          <div className="flex gap-3">
-            <button
-              onClick={() => {
-                deleteProduct.mutate(
-                  { id },
-                  {
-                    onSuccess: () => {
-                      toast.success("Product deleted successfully!");
-                    },
-                    onError: (error) => {
-                      toast.error(`Error deleting product: ${error.message}`);
-                    },
-                  }
-                );
-                toast.dismiss(t.id); // Dismiss the toast after confirmation
-              }}
-              className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-            >
-              Yes, Delete
-            </button>
-            <button
-              onClick={() => toast.dismiss(t.id)} // Dismiss the toast
-              className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ),
-      {
-        duration: Infinity, // Keep the toast open until the user interacts
-      }
-    );
-  };
+    const handleDelete = () => {
+        // Show a confirmation toast
+        toast(
+          (t) => (
+            <div className="flex flex-col items-center gap-3 p-4">
+              <p>Are you sure you want to delete this product?</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    deleteProduct.mutate(
+                      { id },
+                      {
+                        onSuccess: () => {
+                          // ✅ Invalidate and refetch the product list after deletion
+                          utils.product.getAll.invalidate();
+      
+                          toast.success("Product deleted successfully!");
+                        },
+                        onError: (error) => {
+                          toast.error(`Error deleting product: ${error.message}`);
+                        },
+                      }
+                    );
+                    toast.dismiss(t.id); // Dismiss the toast after confirmation
+                  }}
+                  className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+                >
+                  Yes, Delete
+                </button>
+                <button
+                  onClick={() => toast.dismiss(t.id)} // Dismiss the toast
+                  className="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ),
+          {
+            duration: Infinity, // Keep the toast open until the user interacts
+          }
+        );
+      };
+      
   return (
     <div  className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
         <img src={imageCart.src} alt=""  className='w-full '/>
