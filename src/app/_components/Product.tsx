@@ -5,6 +5,8 @@ import imageCart from "@/images/imageCart.svg"
 import { FaStar } from "react-icons/fa";
 import { IoLinkOutline } from "react-icons/io5";
 import Link from 'next/link';
+import { api } from '@/trpc/react';
+import { useRouter } from 'next/navigation';
 
 interface ProductProps {
     id: number
@@ -17,7 +19,14 @@ const  Product:React.FC<ProductProps>=({
     name,
     price
 })=> {
-    
+    const updateProduct = api.product.update.useMutation()
+    const deleteProduct = api.product.delete.useMutation()
+    const router=useRouter()
+
+    // hendle update btn click
+    const handleUpdate = ()=>{
+        router.push(`/update-product/${id}`) 
+    }
   return (
     <div  className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
         <img src={imageCart.src} alt=""  className='w-full '/>
@@ -46,7 +55,7 @@ const  Product:React.FC<ProductProps>=({
                 </div>
             </div>
             <div className='flex  justify-center items-center p-5 gap-5'>
-                <button className='flex justify-center items-center p-2 rounded-xl shadow-xl text-white bg-blue-500 hover:text-blue-500 hover:bg-white'>update the Product</button>
+                <button onClick={handleUpdate} className='flex justify-center items-center p-2 rounded-xl shadow-xl text-white bg-blue-500 hover:text-blue-500 hover:bg-white'>update the Product</button>
                 <button className='flex justify-center items-center p-2 rounded-xl shadow-xl text-white bg-red-500 hover:text-red-500 hover:bg-white'>delete the product</button>
             </div>
         </div>
