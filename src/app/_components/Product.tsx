@@ -11,19 +11,21 @@ import { useRouter } from 'next/navigation';
 
 interface ProductProps {
     id: number
-    name:String
+    name: string
     price: number
+    image?: string
 }
 
 const  Product:React.FC<ProductProps>=({
     id,
     name,
-    price
+    price,
+    image
 })=> {
-    const updateProduct = api.product.update.useMutation()
+    // const updateProduct = api.product.update.useMutation()
     const deleteProduct = api.product.delete.useMutation()
     const router=useRouter()
-      const utils = api.useUtils()
+     const utils = api.useUtils()
     
     // hendle update btn click
     const handleUpdate = ()=>{
@@ -78,7 +80,9 @@ const  Product:React.FC<ProductProps>=({
       
   return (
     <div  className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
-        <img src={imageCart.src} alt=""  className='w-full '/>
+        {
+          image ?<img src={image} alt={name} className="w-32 h-32 object-cover" />:<img src={imageCart.src} alt=""  className='w-full '/>
+        }
         <div className='flex justify-center items-center flex-col gap-3 '>
             <div className=' flex  justify-between items-center gap-2 flex-col '>
                 <div className='flex  justify-start items-center w-full  gap-2 '>

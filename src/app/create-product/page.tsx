@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { uploadImage } from "@/utils/cloudinary";
 
 function Page() {
   const [name, setName] = useState("");
@@ -12,7 +13,7 @@ function Page() {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
   const utils = api.useUtils()
-
+  const [image, setImage] = useState<File|null>(null)
 
   const createProduct = api.product.createProduct.useMutation({
     onSuccess: () => {
@@ -20,7 +21,8 @@ function Page() {
       setSuccess(true);
       setError(null);
       setName("");
-      setPrice("");
+      setPrice(""); 
+      setImage(null)
       utils.product.getAll.invalidate()
       toast.success(`The product created successfully`)
       router.push("/all-product");
@@ -32,12 +34,26 @@ function Page() {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+ 
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Call the mutation
+  
+    // let imageUrl = "";
+    // if (image) {
+    //   try {
+    //     imageUrl = await uploadImage(image); // Upload the image using the Cloudinary utility
+    //   } catch (err) {
+    //     setError("Failed to upload image");
+    //     toast.error("Failed to upload image");
+    //     return;
+    //   }
+    // }
+  
     createProduct.mutate({
       name,
       price: parseFloat(price),
+      // image: imageUrl, // Pass the image URL (string) to the mutation
     });
   };
 
@@ -66,6 +82,13 @@ function Page() {
           type="number"
           step="0.01"
           placeholder="Enter The Price Of The Product"
+        />
+       <input
+          type="file"
+          accept="image/*"
+          placeholder="Enter The Image Of The Product"
+          onChange={(e) => setImage(e.target.files?.[0] || null)} // Update the state with the selected file
+          className="w-full rounded-xl p-3 text-center shadow-xl"
         />
         <button
         //   disabled={createProduct.isLoading} // Fixed: Use `isLoading` (uppercase L)
