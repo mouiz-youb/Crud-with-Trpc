@@ -13,8 +13,8 @@ function Page() {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
   const utils = api.useUtils()
-  const [image, setImage] = useState<File|null>(null)
-
+  const [imageUrl, setImageUrl] = useState<string|null>(null)
+  const [selectedFile, setSelectedFile] = useState<File|null>(null)
   const createProduct = api.product.createProduct.useMutation({
     onSuccess: () => {
       console.log(name, price);
@@ -22,7 +22,7 @@ function Page() {
       setError(null);
       setName("");
       setPrice(""); 
-      setImage(null)
+      setImageUrl(null)
       utils.product.getAll.invalidate()
       toast.success(`The product created successfully`)
       router.push("/all-product");
@@ -34,10 +34,31 @@ function Page() {
     },
   });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(name,price,image)
-  };
-
+          // Call the mutation with the image URL
+          if(!selectedFile) return toast.error(`Please select file`)
+          const formData = new FormData()
+        formData.append("image",selectedFile)
+        const response = await fetch("/api/upload",{
+          method: "POST",
+          body: formData
+        })
+        const data = await response.json()
+        if(data.imageUrl){
+          setImageUrl(data.imageUrl)
+          toast.success(`the image upload successfully`)
+        }else{
+          toast.error(`the image upload failed`)
+        }
+        };
+        // createProduct.mutate({
+        //   name,
+        //   price: parseFloat(price),
+        //   // image: imageUrl,
+        // });
+  const handleFileChange =(event: React.ChangeEvent<HTMLInputElement>)=>{
+    const file = event.target.files?.[0]
+    if(file) setSelectedFile(file)
+  }
   return (
     <div className="flex w-screen flex-col items-center justify-center gap-5 p-10">
       <p className="flex items-center justify-center text-3xl capitalize">
@@ -68,7 +89,7 @@ function Page() {
           type="file"
           accept="image/*"
           placeholder="Enter The Image Of The Product"
-          onChange={(e) => setImage(e.target.files?.[0] || null)} // Update the state with the selected file
+          // onChange={(e) => setImageUrl(e.target.files?.[0] || null)} // Update the state with the File file
           className="w-full rounded-xl p-3 text-center shadow-xl"
         />
         <button
@@ -91,7 +112,7 @@ function Page() {
           </p>
         )}
       </form>
-      {image && <img src={URL.createObjectURL(image)} alt="Product Image" className="w-[200px]" />}
+      {imageUrl && <img src={imageUrl} alt="Product Image" className="w-[200px]" />}
     </div>
   );
 }
