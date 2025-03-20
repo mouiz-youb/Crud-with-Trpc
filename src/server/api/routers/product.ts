@@ -13,16 +13,16 @@ export const productRouter = createTRPCRouter({
     }))
     // the next line 
     .mutation(async ({input ,ctx})=>{
-        // let imageUrl = ""
-        // if(input.image){
-        //     imageUrl = await uploadImage(input.image)
-        // }
+        let imageUrl = ""
+        if(input.image){
+            imageUrl = await uploadImage(input.image)
+        }
         // create a new product
        return ctx.db.product.create({
         data:{
             name:input.name,
             price:input.price,
-            image:input.image
+            image:imageUrl
         }
        })
     }),
@@ -49,10 +49,10 @@ export const productRouter = createTRPCRouter({
         image: z.string().optional(),
     }))
     .mutation(async({input,ctx})=>{
-        // let imageUrl = ""
-        // if(input.image){
-        //     imageUrl = await uploadImage(input.image)
-        // }
+        let imageUrl = ""
+        if(input.image){
+            imageUrl = await uploadImage(input.image)
+        }
         return ctx.db.product.update({
             where:{
                 id:input.id
@@ -60,7 +60,7 @@ export const productRouter = createTRPCRouter({
             data:{
                 name:input.name,
                 price:input.price,
-                image :input.image 
+                image :imageUrl 
             }
         })
     }),

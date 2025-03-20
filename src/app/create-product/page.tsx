@@ -33,32 +33,13 @@ function Page() {
       setSuccess(false);
     },
   });
-
- 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
-    // let imageUrl = "";
-    // if (image) {
-    //   try {
-    //     imageUrl = await uploadImage(image); // Upload the image using the Cloudinary utility
-    //   } catch (err) {
-    //     setError("Failed to upload image");
-    //     toast.error("Failed to upload image");
-    //     return;
-    //   }
-    // }
-  
-    createProduct.mutate({
-      name,
-      price: parseFloat(price),
-      // image: imageUrl, // Pass the image URL (string) to the mutation
-    });
+    console.log(name,price,image)
   };
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center gap-5">
+    <div className="flex w-screen flex-col items-center justify-center gap-5 p-10">
       <p className="flex items-center justify-center text-3xl capitalize">
         Create Product
       </p>
@@ -110,6 +91,7 @@ function Page() {
           </p>
         )}
       </form>
+      {image && <img src={URL.createObjectURL(image)} alt="Product Image" className="w-[200px]" />}
     </div>
   );
 }
