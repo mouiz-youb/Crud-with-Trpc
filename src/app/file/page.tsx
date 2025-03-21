@@ -4,21 +4,28 @@ import React, { useState } from 'react'
 
 function page() {
   const [file ,setFile] = useState<File>()
-  const handleFileUpload =async(e:React.FormEvent<HTMLFormElement>)=>{
-    e.preventDefault()
-    // check the file
-    if(!file) return 
+  const handleFileUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    // Check if file exists
+    if (!file) return console.error("No file selected");
+  
     try {
-      const data = new FormData()
-      data.set("file",file)
-      const response = await axios.post("/api/upload",{
-        file:file
-      })
-      console.log(response)
+      const data = new FormData();
+      data.append("file", file); // ✅ Correctly append file
+  
+      const response = await axios.post("/api/upload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data", // ✅ Set correct Content-Type
+        },
+      });
+  
+      console.log("Upload success:", response.data);
     } catch (error) {
-      console.log(error)
+      console.error("Upload failed:", error);
     }
-  }
+  };
+  
   return (
     <div className='flex justify-center items-center w-screen p-10 h-screen flex-col gap-5 '>
       <form 
