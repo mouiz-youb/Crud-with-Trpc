@@ -6,4 +6,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export default cloudinary;
+export const uploadImage = async (file: File): Promise<string> => {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  return new Promise<string>((resolve, reject) => {
+    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (error, result) => {
+      if (error) reject(error);
+      else resolve(result?.secure_url || "");
+    }).end(buffer);
+  });
+};

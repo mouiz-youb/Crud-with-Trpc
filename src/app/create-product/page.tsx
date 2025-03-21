@@ -34,28 +34,39 @@ function Page() {
   });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!selectedFile) return toast.error(`Please selec a file`)
-      const formdata =  new FormData()
-    formdata.append("image",selectedFile)
+
+    if (!selectedFile) return toast.error("Please select a file");
+
+    const formData = new FormData();
+    formData.append("image", selectedFile); // Append file
+    formData.append("name", name); // Append product name
+    formData.append("price", price); // Append product price
+
     try {
-      // upload the image to Cloudinary via API
-      const response = await axios.post("/api/upload" ,{
-        formdata
-      })
-      const imageUrl = response.data.imageUrl
-      if(imageUrl){
-        console.log(`image up ${name } ${price} ${imageUrl}`)
-        toast.success(`Image uploaded successfully`)
-        createProduct.mutate({name,  price: parseFloat(price), image: imageUrl})
-      }else{
-        console.log(`image up ${name } ${price} ${imageUrl}`)
-        toast.error(`Failed to upload image`)
-      }
+      // **Upload image to Cloudinary via Next.js API**
+      const response = await axios.post("/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // ✅ Explicitly set Content-Type
+        },
+      });
+
+      const imageUrl = response.data.imageUrl;
+      if (!imageUrl) return toast.error("Image upload failed");
+
+      toast.success("Image uploaded successfully!");
+
+      // **Store product details in SQLite via Prisma**
+      createProduct.mutate({
+        name,
+        price: parseFloat(price),
+        image:imageUrl,
+      });
     } catch (error) {
       console.error("Upload Error:", error);
       toast.error("Error uploading image");
     }
-  };
+};
+
  
 
   return (
