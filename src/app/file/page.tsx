@@ -1,9 +1,11 @@
 "use client"
 import axios from 'axios'
 import React, { useState } from 'react'
+import toast from 'react-hot-toast'
 
 function page() {
   const [file ,setFile] = useState<File>()
+  const [previewUrl, setPreviewUrl] = useState<string |null>(null)
   const handleFileUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
@@ -19,10 +21,15 @@ function page() {
           "Content-Type": "multipart/form-data", // ✅ Set correct Content-Type
         },
       });
-  
+
+      if(response.data.fileUrl){
+        setPreviewUrl(response.data.fileUrl)
+      }
       console.log("Upload success:", response.data);
+      toast.success(`the file upload successfully`)
     } catch (error) {
       console.error("Upload failed:", error);
+      toast.error(` Error when the file upload `)
     }
   };
   
@@ -44,6 +51,12 @@ function page() {
           </button>
     </form>
     {file && <img src={URL.createObjectURL(file)} alt="Uploaded file"  className='flex justify-center items-center flex-col w-1/3'/>}
+    {previewUrl && (
+        <div className="flex flex-col items-center gap-3">
+          <h2 className="text-lg font-bold">Uploaded File Preview:</h2>
+          <img src={previewUrl} alt="Uploaded file" className="w-1/3 shadow-lg rounded-lg" />
+        </div>
+      )}
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const data = await request.formData();
-    const file = data.get("file") as File;
+    const file :File |null = data.get("file") as unknown as  File;
 
     if (!file) {
       return NextResponse.json({
@@ -15,12 +15,15 @@ export async function POST(request: NextRequest) {
     // Convert file to Buffer
     const bytes = await file.arrayBuffer();
     const fileBuffer = Buffer.from(bytes);
-
+    // convert buffer to base64 for easy rendering on client side 
+    // const base64String = fileBuffer.toString("base64");
+    const base64Image = `data:${file.type};base64,${fileBuffer.toString(`base64`)}`
     // Return file details in the response
     return NextResponse.json({
       fileName: file.name,
       fileType: file.type,
       fileSize: file.size,
+      fileUrl :base64Image,
       fileContent: fileBuffer.toString("base64"), // Convert buffer to Base64 string
       success: true,
     });
