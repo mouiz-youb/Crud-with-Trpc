@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { uploadImage } from "@/utils/cloudinary";
-
+import axios from "axios"
 function Page() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -13,8 +12,8 @@ function Page() {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
   const utils = api.useUtils()
-  const [imageUrl, setImageUrl] = useState<string|null>(null)
-  const [selectedFile, setSelectedFile] = useState<File|null>(null)
+  // const [imageUrl, setImageUrl] = useState<string|null>(null)
+  const [selectedFile, setSelectedFile] = useState<File|null>(null);
   const createProduct = api.product.createProduct.useMutation({
     onSuccess: () => {
       console.log(name, price);
@@ -22,7 +21,7 @@ function Page() {
       setError(null);
       setName("");
       setPrice(""); 
-      setImageUrl(null)
+      setSelectedFile(null)
       utils.product.getAll.invalidate()
       toast.success(`The product created successfully`)
       router.push("/all-product");
@@ -34,31 +33,31 @@ function Page() {
     },
   });
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-          // Call the mutation with the image URL
-          if(!selectedFile) return toast.error(`Please select file`)
-          const formData = new FormData()
-        formData.append("image",selectedFile)
-        const response = await fetch("/api/upload",{
-          method: "POST",
-          body: formData
-        })
-        const data = await response.json()
-        if(data.imageUrl){
-          setImageUrl(data.imageUrl)
-          toast.success(`the image upload successfully`)
-        }else{
-          toast.error(`the image upload failed`)
-        }
-        };
-        // createProduct.mutate({
-        //   name,
-        //   price: parseFloat(price),
-        //   // image: imageUrl,
-        // });
-  const handleFileChange =(event: React.ChangeEvent<HTMLInputElement>)=>{
-    const file = event.target.files?.[0]
-    if(file) setSelectedFile(file)
-  }
+    e.preventDefault();
+    if(!selectedFile) return toast.error(`Please selec a file`)
+      const formdata =  new FormData()
+    formdata.append("image",selectedFile)
+    try {
+      // upload the image to Cloudinary via API
+      const response = await axios.post("/api/upload" ,{
+        formdata
+      })
+      const imageUrl = response.data.imageUrl
+      if(imageUrl){
+        console.log(`image up ${name } ${price} ${imageUrl}`)
+        toast.success(`Image uploaded successfully`)
+        createProduct.mutate({name,  price: parseFloat(price), image: imageUrl})
+      }else{
+        console.log(`image up ${name } ${price} ${imageUrl}`)
+        toast.error(`Failed to upload image`)
+      }
+    } catch (error) {
+      console.error("Upload Error:", error);
+      toast.error("Error uploading image");
+    }
+  };
+ 
+
   return (
     <div className="flex w-screen flex-col items-center justify-center gap-5 p-10">
       <p className="flex items-center justify-center text-3xl capitalize">
@@ -82,18 +81,16 @@ function Page() {
           onChange={(e) => setPrice(e.target.value)}
           className="w-full rounded-xl p-3 text-center shadow-xl"
           type="number"
-          step="0.01"
           placeholder="Enter The Price Of The Product"
         />
-       <input
+      <input
+          placeholder="Enter The Price Of The Product"
           type="file"
           accept="image/*"
-          placeholder="Enter The Image Of The Product"
-          // onChange={(e) => setImageUrl(e.target.files?.[0] || null)} // Update the state with the File file
+          onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
           className="w-full rounded-xl p-3 text-center shadow-xl"
         />
         <button
-        //   disabled={createProduct.isLoading} // Fixed: Use `isLoading` (uppercase L)
           type="submit"
           className="w-full cursor-pointer rounded-xl bg-black p-3 text-center text-white shadow-xl transition-all hover:bg-gray-400 hover:text-black"
         >
@@ -112,7 +109,7 @@ function Page() {
           </p>
         )}
       </form>
-      {imageUrl && <img src={imageUrl} alt="Product Image" className="w-[200px]" />}
+      {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Product Image" className="w-[200px]" />}
     </div>
   );
 }

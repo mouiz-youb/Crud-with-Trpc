@@ -1,7 +1,6 @@
 // server/api/routers/product.ts
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { uploadImage } from "@/utils/cloudinary";
 
 export const productRouter = createTRPCRouter({
   // Create a new product
@@ -14,8 +13,6 @@ export const productRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-     
-
       // Create a new product
       return ctx.db.product.create({
         data: {

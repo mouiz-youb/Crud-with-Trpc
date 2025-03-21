@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { uploadImage } from "@/utils/cloudinary";
+import cloudinary from "@/utils/cloudinary";
+import { Readable } from "stream";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +16,16 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload image to Cloudinary
-    const imageUrl = await uploadImage(buffer);
+    const imageUrl = await new Promise<string>((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { resource_type: "auto" },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result?.secure_url || "");
+        }
+      );
+      Readable.from(buffer).pipe(stream);
+    });
 
     return NextResponse.json({ imageUrl }, { status: 200 });
   } catch (error) {
