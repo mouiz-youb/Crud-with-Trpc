@@ -13,7 +13,7 @@ function Page() {
   const router = useRouter();
   const utils = api.useUtils()
   // const [imageUrl, setImageUrl] = useState<string|null>(null)
-  const [selectedFile, setSelectedFile] = useState<File|null>(null);
+  const [file, setFile] = useState<File|null>(null);
   const createProduct = api.product.createProduct.useMutation({
     onSuccess: () => {
       console.log(name, price);
@@ -21,7 +21,7 @@ function Page() {
       setError(null);
       setName("");
       setPrice(""); 
-      setSelectedFile(null)
+      setFile(null)
       utils.product.getAll.invalidate()
       toast.success(`The product created successfully`)
       router.push("/all-product");
@@ -32,43 +32,39 @@ function Page() {
       setSuccess(false);
     },
   });
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!selectedFile) return toast.error("Please select a file");
-
-    const formData = new FormData();
-    formData.append("image", selectedFile); // Append file
-    formData.append("name", name); // Append product name
-    formData.append("price", price); // Append product price
-
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   createProduct.mutate({ name, price: Number(price) });
+  // };
+  const handleSubmit =async(e:React.FormEvent<HTMLFormElement>)=>{
+    e.preventDefault()
+    if(!file) return toast.error(`No file selected`)
     try {
-      // **Upload image to Cloudinary via Next.js API**
-      const response = await axios.post("/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // ✅ Explicitly set Content-Type
-        },
+      // upload the file
+      const data = new FormData();
+      data.append("file", file);
+
+      const uploadResponse = await axios.post("/api/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      const imageUrl = response.data.imageUrl;
-      if (!imageUrl) return toast.error("Image upload failed");
-
-      toast.success("Image uploaded successfully!");
-
-      // **Store product details in SQLite via Prisma**
+      
+      if (!uploadResponse.data.success) {
+        return toast.error("File upload failed");
+      }
+      // Get the upload file URL
+      const fileUrl = uploadResponse.data.fileUrl
+      // Create the product
       createProduct.mutate({
         name,
-        price: parseFloat(price),
-        image:imageUrl,
-      });
+        price: Number(price),
+        imageUrl: fileUrl
+      })
+      toast.success(`The product created successfully `)
     } catch (error) {
-      console.error("Upload Error:", error);
-      toast.error("Error uploading image");
+      console.log(error)
+      toast.error(String(error))
     }
-};
-
- 
-
+  } 
   return (
     <div className="flex w-screen flex-col items-center justify-center gap-5 p-10">
       <p className="flex items-center justify-center text-3xl capitalize">
@@ -98,7 +94,7 @@ function Page() {
           placeholder="Enter The Price Of The Product"
           type="file"
           accept="image/*"
-          onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
           className="w-full rounded-xl p-3 text-center shadow-xl"
         />
         <button
@@ -120,7 +116,7 @@ function Page() {
           </p>
         )}
       </form>
-      {selectedFile && <img src={URL.createObjectURL(selectedFile)} alt="Product Image" className="w-[200px]" />}
+      {file && <img src={URL.createObjectURL(file)} alt="Product Image" className="w-[200px]" />}
     </div>
   );
 }

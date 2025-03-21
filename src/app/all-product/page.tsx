@@ -20,7 +20,7 @@ const Page: React.FC = () => {
       {products && products.length > 0 ? (
         products.map((product ) => (
             <div key={product.id}>
-                <Product id={product.id}  name={product.name} price={product.price} />
+                <Product id={product.id}  name={product.name} price={product.price} image={product.imageUrl ?? undefined}/>
             </div>
         ))
       ) : (

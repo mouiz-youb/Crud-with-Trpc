@@ -9,7 +9,7 @@ export const productRouter = createTRPCRouter({
       z.object({
         name: z.string().min(3, "Title is required"),
         price: z.number().min(0, "Price must be a positive number"),
-        image: z.string().optional(), // Image field
+        imageUrl: z.string().optional(), // Image field
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -18,7 +18,7 @@ export const productRouter = createTRPCRouter({
         data: {
           name: input.name,
           price: input.price,
-          image: input.image, // Use the uploaded image URL
+          imageUrl: input.imageUrl, // Use the uploaded image URL
         },
       });
     }),
@@ -46,7 +46,7 @@ export const productRouter = createTRPCRouter({
         id: z.number(),
         name: z.string().min(3, "Title is required"),
         price: z.number().min(0, "Price must be a positive number"),
-        image: z.string().optional(),
+        imageUrl: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -58,7 +58,7 @@ export const productRouter = createTRPCRouter({
         data: {
           name: input.name,
           price: input.price,
-          image: input.image, // Use the uploaded image URL
+          imageUrl: input.imageUrl, // Use the uploaded image URL
         },
       });
     }),
