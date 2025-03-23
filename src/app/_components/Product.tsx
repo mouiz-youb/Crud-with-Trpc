@@ -77,7 +77,6 @@ const  Product:React.FC<ProductProps>=({
           }
         );
       };
-      // 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
   return (
     <div  className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
         {
