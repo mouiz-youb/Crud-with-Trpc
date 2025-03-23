@@ -93,7 +93,7 @@ function Page() {
       <input
           placeholder="Enter The Price Of The Product"
           type="file"
-          accept="image/*"
+          // accept="image/*"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
           className="w-full rounded-xl p-3 text-center shadow-xl"
         />
