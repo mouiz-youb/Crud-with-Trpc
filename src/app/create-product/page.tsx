@@ -53,6 +53,9 @@ function Page() {
       }
       // Get the upload file URL
       const fileUrl = uploadResponse.data.fileUrl
+      // Get the upload file url form cloudianry 
+       const fileUrlCloudInary = uploadResponse.data.fileUrlCloudInary
+       console.log(`file from cloudianry ${fileUrlCloudInary}`)
       // Create the product
       createProduct.mutate({
         name,

@@ -1,3 +1,4 @@
+import cloudinary from "@/utils/cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -18,12 +19,16 @@ export async function POST(request: NextRequest) {
     // convert buffer to base64 for easy rendering on client side 
     // const base64String = fileBuffer.toString("base64");
     const base64Image = `data:${file.type};base64,${fileBuffer.toString(`base64`)}`
+    // upload to cloudinary
+    const UploadResponse = await cloudinary.uploader.upload(base64Image)
+    
     // Return file details in the response
     return NextResponse.json({
       fileName: file.name,
       fileType: file.type,
       fileSize: file.size,
       fileUrl :base64Image,
+      fileUrlCloudInary :UploadResponse.secure_url,
       fileContent: fileBuffer.toString("base64"), // Convert buffer to Base64 string
       success: true,
     });

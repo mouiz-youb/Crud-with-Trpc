@@ -80,7 +80,7 @@ const  Product:React.FC<ProductProps>=({
   return (
     <div  className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
         {
-          image ?<img src={image} alt={name} className="w-32 h-32 object-cover bg-blue-100 marker:text-clip" />:<img src={imageCart.src} alt=""  className='w-full '/>
+          image ?<img src={image} alt={name} className="w-32 h-32 object-cover " />:<img src={imageCart.src} alt=""  className='w-full '/>
         }
         <div className='flex justify-center items-center flex-col gap-3 '>
             <div className=' flex  justify-between items-center gap-2 flex-col '>
