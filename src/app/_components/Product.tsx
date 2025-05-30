@@ -80,7 +80,7 @@ const  Product:React.FC<ProductProps>=({
   return (
     <div  className='flex justify-center items-center gap-5 shadow-xl  flex-col rounded-xl  '>
         {
-          image ?<img src={image} alt={name} className="w-32 h-32 object-cover " />:<img src={imageCart.src} alt=""  className='w-full '/>
+          image ?<div className="w-full flex justify-center items-center  " ><img src={image} alt={name} className="" /></div>:<img src={imageCart.src} alt=""  className='w-full p-5 '/>
         }
         <div className='flex justify-center items-center flex-col gap-3 '>
             <div className=' flex  justify-between items-center gap-2 flex-col '>
@@ -100,7 +100,7 @@ const  Product:React.FC<ProductProps>=({
             </div>
             <div className=' flex  justify-between items-center flex-col  gap-2 '>
                 <div className='flex  justify-center items-center  gap-2 '>
-                    <p>Product Price  : {price } </p>
+                    <p className='flex justify-center items-center gap-2'>Product Price  : {price } <span>$</span> </p>
                 </div>
                 <div className='flex  justify-center items-center  gap-2 '>
                     <Link href="/" className='cursor-pointer flex justify-center items-center gap-2'>visited Link <IoLinkOutline/></Link>

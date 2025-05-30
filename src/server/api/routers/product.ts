@@ -44,7 +44,7 @@ export const productRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number(),
-        name: z.string().min(3, "Title is required"),
+        name: z.string().min(5, "Title is required"),
         price: z.number().min(0, "Price must be a positive number"),
         imageUrl: z.string().optional(),
       })

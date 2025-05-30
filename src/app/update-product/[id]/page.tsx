@@ -79,7 +79,7 @@ const handleSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
           price: parseFloat(price),
           imageUrl: fileUrl,
         })
-        toast.success(`The product created successfully `)
+        toast.success(`The product updated successfully `)
       } catch (error) {
         console.log(error)
         toast.error(String(error))

@@ -12,7 +12,6 @@ function Page() {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
   const utils = api.useUtils()
-  // const [imageUrl, setImageUrl] = useState<string|null>(null)
   const [file, setFile] = useState<File|null>(null);
   const createProduct = api.product.createProduct.useMutation({
     onSuccess: () => {
@@ -32,10 +31,7 @@ function Page() {
       setSuccess(false);
     },
   });
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   createProduct.mutate({ name, price: Number(price) });
-  // };
+ 
   const handleSubmit =async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
     if(!file) return toast.error(`No file selected`)
@@ -68,8 +64,11 @@ function Page() {
       toast.error(String(error))
     }
   } 
+  const hendlePush =()=>{
+    router.push("/all-product")
+  }
   return (
-    <div className="flex w-screen flex-col items-center justify-center gap-5 p-10">
+    <div className="flex w-screen flex-col items-center justify-center gap-5 p-10 ">
       <p className="flex items-center justify-center text-3xl capitalize">
         Create Product
       </p>
@@ -120,6 +119,9 @@ function Page() {
         )}
       </form>
       {file && <img src={URL.createObjectURL(file)} alt="Product Image" className="w-[200px]" />}
+      <div className="flex w-full  items-end pr-5 justify-end ">
+        <button onClick={hendlePush} className="flex justify-center items-center rounded-2xl bg-slate-600 text-xl p-2  text-white hover:text-slate-600 hover:bg-slate-300 hover:shadow-2xl ">Go to see all product </button>
+      </div>
     </div>
   );
 }
